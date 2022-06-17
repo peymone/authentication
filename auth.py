@@ -1,4 +1,3 @@
-from winreg import REG_QWORD
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
@@ -108,7 +107,6 @@ def signup():
 
         db.commit()
         return render_template('signup.html', signin_link=url_for('signin'))
-
     else:
         return render_template('signup.html', signin_link=url_for('signin'))
 
