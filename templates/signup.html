@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/assets/css/auth.css" id="theme-link">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <title>Log In</title>
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <div class="header__inner">
+                <div class="header__logo">
+                    <img src="" alt="Logo">
+                </div>
+                <nav class="nav">
+                    <div class="nav__link">Already have an account? <a href="{{ signin_link }}"
+                            class="nav__signup"><span>Sign In</span></a></div>
+                    <div class="mobile-nav__link"><a href="{{ signin_link }}" class="nav__signup"><span>Sign
+                                In</span></a></div>
+                </nav>
+            </div>
+        </header>
+        <div class="signup">
+            <div class="container">
+                <div class="signup__inner">
+                    <div class="signup__item">
+                        <h1 class="signup__title">Sign Up</h1>
+                        <div class="signup__subtitle">Create an account and start managing your candidates!</div>
+                        {% for category, message in get_flashed_messages(True) %}
+                        <div class="flash {{ category }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        <form action="/signup" method="post" class="signup__form">
+                            <div class="input__group">
+                                <input required="required" type="email" id="email" name="email" placeholder="Email"
+                                    class="signup__email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                                <label for="email" class="dynamic-label">Email</label>
+                            </div>
+                            <div class="input__group">
+                                <input required="required" type="text" id="login" name="login" placeholder="Login"
+                                    class="signup__login" pattern="[a-z].{4,}">
+                                <label for="login" class="dynamic-label">Login</label>
+                            </div>
+                            <div class="input__group">
+                                <input required="required" type="password" id="password" name="password"
+                                    placeholder="Password" class="signup__password"
+                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                                <label for="password" class="dynamic-label">Password</label>
+                                <span class="help-text"></span>
+                            </div>
+                            <div class="input__group">
+                                <input required="required" type="password" id="rpassword" name="rpassword"
+                                    placeholder="Repeat password" class="signup__rpassword">
+                                <label for="password" class="dynamic-label" required="required">Repeat Password</label>
+                                <span class="help-text2"></span>
+                            </div>
+                            <div class="error-panel">
+                                <span class="error-text">123</span>
+                            </div>
+                            <div class="signup__options">
+                                <input type="checkbox" required='required' class="custom-checkbox" id="termsOfUse"
+                                    name="termsOfUse" value="yes">
+                                <label for="termsOfUse">I am agree with&nbsp <a href="" class="terms-of-use">terms of
+                                        use</a></label>
+                                <!-- <a href="" class="auth__fgtpassword">Forgot password?</a> -->
+                            </div>
+                            <button class="btn__signup" id="btn__signup" type="submit">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="footer__bg">
+                <button class="theme-toggle" id="theme-toggle"></button>
+            </div>
+        </footer>
+    </div>
+    <script type="text/javascript" src="../static/assets/js/change-theme.js"></script>
+    <script type="text/javascript" src="../static/assets/js/custom-validation.js"></script>
+</body>
+
+</html>
