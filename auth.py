@@ -8,7 +8,7 @@ DEBUG = True
 USERNAME = 'admin'
 PASSWORD = 'default'
 DATABASE = '/tmp/auth.db'
-SECRET_KEY = 'development key'      # change for production
+SECRET_KEY = os.urandom(30)      # 'development key'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -17,7 +17,7 @@ app.config.update(dict(
     DEBUG=True,
     USERNAME='admin',
     PASSWORD='default',
-    SECRET_KEY='development key',
+    SECRET_KEY=os.urandom(30),
     DATABASE=os.path.join(app.root_path, 'auth.db')
 
 ))
