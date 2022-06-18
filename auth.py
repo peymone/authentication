@@ -8,7 +8,7 @@ DEBUG = True
 USERNAME = 'admin'
 PASSWORD = 'default'
 DATABASE = '/tmp/auth.db'
-SECRET_KEY = 'development key'      # change for production
+SECRET_KEY = os.urandom(30)      # 'development key'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
