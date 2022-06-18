@@ -1,60 +1,12 @@
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask import Blueprint, render_template, redirect, request, session, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
-import os
+from .db import get_db
+
+blueprint = Blueprint('auth', __name__)
 
 
-DEBUG = True
-USERNAME = 'admin'
-PASSWORD = 'default'
-DATABASE = '/tmp/auth.db'
-SECRET_KEY = os.urandom(30)      # 'development key'
-
-app = Flask(__name__)
-app.config.from_object(__name__)
-
-app.config.update(dict(
-    DEBUG=True,
-    USERNAME='admin',
-    PASSWORD='default',
-    SECRET_KEY=os.urandom(30),
-    DATABASE=os.path.join(app.root_path, 'auth.db')
-
-))
-app.config.from_envvar('AUTH_SETTINGS', silent=True)
-
-
-def connect_db():
-    connection = sqlite3.connect(app.config['DATABASE'])
-    # connection.row_factory = sqlite3.Row
-
-    return connection
-
-
-def init_db():
-    with app.app_context():
-        db = get_db()
-        with app.open_resource('schema.sql') as file:
-            db.cursor().executescript(file.read().decode('utf8'))
-
-        db.commit()
-
-
-def get_db():
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
-
-    return g.sqlite_db
-
-
-@app.teardown_appcontext
-def close_db(eror):
-    if hasattr(g, 'sqlite_db'):
-        g.sqlite_db.close()
-
-
-@app.route('/')
-@app.route('/signin', methods=['GET', 'POST'])
+@blueprint.route('/')
+@blueprint.route('/signin', methods=['GET', 'POST'])
 def signin():
     if session.get('logged_in'):
         return "<h1>Content here</h1>"
@@ -86,13 +38,13 @@ def signin():
                     # return redirect(url_for('content'))
 
             flash(error, category='error')
-            return render_template('signin.html', signup_link=url_for('signup'))
+            return render_template('signin.html', signup_link=url_for('.signup'))
 
         else:
-            return render_template('signin.html', signup_link=url_for('signup'))
+            return render_template('signin.html', signup_link=url_for('.signup'))
 
 
-@ app.route('/signup', methods=['POST', 'GET'])
+@blueprint.route('/signup', methods=['POST', 'GET'])
 def signup():
     if request.method == 'POST':
         email, login, password = request.form['email'], request.form['login'], request.form['password']
@@ -102,16 +54,16 @@ def signup():
             db.execute("insert into users values (?, ?, ?)",
                        (email.lower(), login.lower(), generate_password_hash(password)))
             flash("You are signed up", category='success')
-        except sqlite3.IntegrityError:
+        except db.IntegrityError:
             flash(f"User {login} is already registred", category='error')
 
         db.commit()
-        return render_template('signup.html', signin_link=url_for('signin'))
+        return render_template('signup.html', signin_link=url_for('.signin'))
     else:
-        return render_template('signup.html', signin_link=url_for('signin'))
+        return render_template('signup.html', signin_link=url_for('.signin'))
 
 
-@ app.route('/content')
+@blueprint.route('/content')
 def content():
     if session.get('logged_in'):
         return render_template('content.html')
@@ -119,11 +71,7 @@ def content():
         return redirect(url_for('login'))
 
 
-@ app.route('/logout')
+@blueprint.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    return redirect(url_for('signin'))
-
-
-if __name__ == '__main__':
-    app.run()
+    return redirect(url_for('.signin'))
