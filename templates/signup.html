@@ -54,15 +54,15 @@
                                 <label for="login" class="dynamic-label">Login</label>
                             </div>
                             <div class="input__group">
-                                <input required="required" type="password" id="password" name="password"
+                                <input required="required" type="text" id="password" name="password"
                                     placeholder="Password" class="signup__password"
                                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
                                 <label for="password" class="dynamic-label">Password</label>
-                                <span class="help-text"></span>
+                                <button class="btn__generatepswrd" id="btn__generatepswrd" type="button">G</button>
                             </div>
                             <div class="input__group">
-                                <input required="required" type="password" id="rpassword" name="rpassword"
-                                    placeholder="Repeat password" class="signup__rpassword">
+                                <input required="required" type="text" id="rpassword" name="rpassword"
+                                    placeholder="Repeat password" class="signup__rpassword" invalid="1">
                                 <label for="password" class="dynamic-label" required="required">Repeat Password</label>
                                 <span class="help-text2"></span>
                             </div>
@@ -90,6 +90,7 @@
     </div>
     <script type="text/javascript" src="../static/assets/js/change-theme.js"></script>
     <script type="text/javascript" src="../static/assets/js/custom-validation.js"></script>
+    <script type="text/javascript" src="../static/assets/js/password-generator.js"></script>
 </body>
 
 </html>
