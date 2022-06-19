@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from .mail import send_email
 from .db import get_db
+
 
 blueprint = Blueprint('auth', __name__)
 
@@ -53,11 +55,13 @@ def signup():
         try:
             db.execute("insert into users values (?, ?, ?)",
                        (email.lower(), login.lower(), generate_password_hash(password)))
-            flash("You are signed up", category='success')
+            flash("You are signed up, confirm your email", category='success')
         except db.IntegrityError:
             flash(f"User {login} is already registred", category='error')
 
         db.commit()
+
+        send_email(f"{login.title()}, please confirm your email address")
         return render_template('signup.html', signin_link=url_for('.signin'))
     else:
         return render_template('signup.html', signin_link=url_for('.signin'))
