@@ -1,0 +1,91 @@
+body {
+    font-family: 'Lexend Deca', sans-serif;
+    margin: 0;
+    color: var(--font-color);
+    line-height: 1.6;
+    font-size: 14px;
+    background-color: var(--bg-color);
+    -webkit-font-smoothing: antialiased;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+.page {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+}
+
+/* Container */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+ul {
+    padding-left: 15px;
+}
+
+.container {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.confirmed {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.confirmed__trouble {
+    font-size: 20px;
+}
+
+.signin {
+    text-decoration: none;
+    color: var(--btn-color);
+}
+
+/* Dark/Light Mode Support
+-------------------------------------------------- */
+/*Light*/
+[data-theme="light"] {
+    --font-color: #224957;
+    --link-color: #000000;
+    --btn-color: #20DF7F;
+    --btn-hover-color: #19b466;
+    --input-field-color: #224957;
+    --input-text-color: #fff;
+    --bg-color: #E5E5E5;
+    --bg-image: url(../img/VectorsLight.svg);
+    --red-color: #ec3636;
+}
+
+/*Dark*/
+[data-theme="dark"] {
+    --font-color: #fff;
+    --link-color: #20DF7F;
+    --btn-color: #20DF7F;
+    --btn-hover-color: #19b466;
+    --input-field-color: #224957;
+    --input-text-color: #fff;
+    --bg-color: #093545;
+    --bg-image: url(../img/Vectors.svg);
+    --red-color: #ec3636;
+}
