@@ -330,10 +330,12 @@ h6 {
 
 .flash.success {
     color: var(--btn-color);
+    font-weight: 700;
 }
 
 .flash.error {
     color: var(--red-color);
+    font-weight: 700;
 }
 
 /* checkbox */
@@ -421,6 +423,14 @@ h6 {
     position: absolute;
     margin: 22px 36px;
 }
+
+.btn__generatepswrd {
+    position: absolute;
+    top: 45%;
+    right: 18px;
+}
+
+/* footer */
 
 .footer {
     margin-top: auto;

@@ -4,10 +4,6 @@ var myInput3 = document.getElementById("login");
 var myInput4 = document.getElementById("email");
 const button = document.getElementById('btn__signup');
 
-myInput.onfocus = function () {
-    document.getElementById("message").style.display = "block";
-}
-
 myInput.onkeyup = function () {
     var password = document.getElementById("password").value;
     var rpassword = document.getElementById("rpassword").value;
@@ -46,7 +42,21 @@ myInput.onkeyup = function () {
     //     return [false, 'Password must contain at least one upper case letter']
     //     alert('Password must contain at least one upper case letter');
     // }
-    document.getElementsByClassName("help-text")[0].textContent = "";
+    if (password != rpassword) {
+        document.getElementsByClassName("error-text")[0].textContent = 'Password and control password have to be same';
+        document.getElementsByClassName("signup__rpassword")[0].style = "border: 1px solid var(--red-color);";
+        document.getElementsByClassName("error-panel")[0].style = "display: block;";
+        document.getElementById("rpassword").setCustomValidity('Passwords do not match');
+        // button.disabled = true;
+    } else if (rpassword == password) {
+        document.getElementsByClassName("error-text")[0].textContent = '';
+        document.getElementsByClassName("signup__rpassword")[0].style = "border: 1px solid var(--btn-color);";
+        document.getElementsByClassName("error-panel")[0].style = "dipslay: none;";
+        document.getElementById("rpassword").setCustomValidity('');
+        // button.disabled = false;
+    }
+
+    document.getElementsByClassName("error-text")[0].textContent = "";
     document.getElementsByClassName("error-panel")[0].style = "dipslay: none;";
     return [true];
 }
@@ -58,13 +68,14 @@ myInput2.onkeyup = function () {
         document.getElementsByClassName("error-text")[0].textContent = 'Password and control password have to be same';
         document.getElementsByClassName("signup__rpassword")[0].style = "border: 1px solid var(--red-color);";
         document.getElementsByClassName("error-panel")[0].style = "display: block;";
-        button.disabled = true;
-    }
-    else if (rpassword != '') {
+        document.getElementById("rpassword").setCustomValidity('Passwords do not match');
+        // button.disabled = true;
+    } else if (rpassword == password) {
         document.getElementsByClassName("error-text")[0].textContent = '';
         document.getElementsByClassName("signup__rpassword")[0].style = "border: 1px solid var(--btn-color);";
         document.getElementsByClassName("error-panel")[0].style = "dipslay: none;";
-        button.disabled = false;
+        document.getElementById("rpassword").setCustomValidity('');
+        // button.disabled = false;
     }
 }
 
