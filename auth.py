@@ -1,10 +1,24 @@
-from flask import Blueprint, render_template, redirect, request, session, url_for, flash
+from flask import Blueprint, render_template, current_app, redirect, request, session, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import URLSafeTimedSerializer
 from .mail import send_email
 from .db import get_db
 
 
 blueprint = Blueprint('auth', __name__)
+
+
+def generate_confirmation_token(email):
+    seializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return seializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
+
+
+def confirm_token(token):
+    serialilez = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    email = serialilez.loads(
+        token, salt=current_app.config['SECURITY_PASSWORD_SALT'])
+
+    return email
 
 
 @blueprint.route('/')
@@ -17,6 +31,7 @@ def signin():
         if request.method == 'POST':
             error = None
             db = get_db()
+
             if '@' in request.form['login']:
                 user = db.execute(
                     "select * from users where email = ?", [request.form['login'].lower()]).fetchone()
@@ -28,6 +43,10 @@ def signin():
                 error = "Incorrect login"
             elif not check_password_hash(user[-1], request.form['password']):
                 error = "Incorrect password"
+
+            if user[1] == 'False':
+                flash("Please, confirm your email address", category='error')
+                return render_template('signin.html', signup_link=url_for('.signup'))
 
             if error is None:
                 if request.form.get('rememberMe') is None:
@@ -53,18 +72,38 @@ def signup():
 
         db = get_db()
         try:
-            db.execute("insert into users values (?, ?, ?)",
-                       (email.lower(), login.lower(), generate_password_hash(password)))
+            db.execute("insert into users values (?, ?, ?, ?)",
+                       (email.lower(), 'False', login.lower(), generate_password_hash(password)))
             flash("You are signed up, confirm your email", category='success')
         except db.IntegrityError:
             flash(f"User {login} is already registred", category='error')
 
         db.commit()
 
-        send_email(f"{login.title()}, please confirm your email address")
+        token = generate_confirmation_token(email)
+        confirm_url = url_for('.confirm_email', token=token, _external=True)
+
+        send_email(
+            f"Welcome, {login.title()}! Thanks for signed up. Plesase follow this link to activate your account\n{confirm_url}")
         return render_template('signup.html', signin_link=url_for('.signin'))
     else:
         return render_template('signup.html', signin_link=url_for('.signin'))
+
+
+@blueprint.route('/confirm/<token>')
+def confirm_email(token):
+    email = confirm_token(token)
+    db = get_db()
+
+    if db.execute("select * from users where email = ?", [email]).fetchone() is None:
+        return "<h1>your tocen is incorrect</h1>"
+    else:
+        db.execute(
+            "update users set confirmed_email = ? where email = ?", ['True', email])
+
+        db.commit()
+        return "<h1>your login is confirmed now</h1>"
+        # return render_template('confirm_email.html')
 
 
 @blueprint.route('/content')

@@ -13,6 +13,7 @@ def create_app(production_config=None):
         USERNAME='admin',
         PASSWORD='default',
         SECRET_KEY='development key',   # SECRET_KEY=os.urandom(30)
+        SECURITY_PASSWORD_SALT='security password salt',
         DATABASE=os.path.join(app.root_path, 'auth.db'),
 
         MAIL_SERVER='smtp.mail.ru',
