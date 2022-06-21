@@ -24,49 +24,54 @@ def confirm_token(token):
 @blueprint.route('/')
 @blueprint.route('/signin', methods=['GET', 'POST'])
 def signin():
-    if session.get('logged_in'):
-        return "<h1>Content here</h1>"
-        # return redirect(url_for('content'))
-    else:
-        if request.method == 'POST':
-            error = None
-            db = get_db()
+    if session.get('stay_in'):
+        return redirect(url_for('.content'))
+    session.clear()
 
-            if '@' in request.form['login']:
-                user = db.execute(
-                    "select * from users where email = ?", [request.form['login'].lower()]).fetchone()
-            else:
-                user = db.execute(
-                    "select * from users where login = ?", [request.form['login'].lower()]).fetchone()
+    if request.method == 'POST':
+        error = None
+        db = get_db()
 
-            if user is None:
-                error = "Incorrect login"
-            elif not check_password_hash(user[-1], request.form['password']):
-                error = "Incorrect password"
+        if '@' in request.form['login']:
+            user = db.execute(
+                "select * from users where email = ?", [request.form['login'].lower()]).fetchone()
+        else:
+            user = db.execute(
+                "select * from users where login = ?", [request.form['login'].lower()]).fetchone()
 
+        if user is None:
+            error = "Incorrect login"
+        elif not check_password_hash(user[-1], request.form['password']):
+            error = "Incorrect password"
+        else:
             if user[1] == 'False':
                 flash("Please, confirm your email address", category='error')
                 return render_template('signin.html', signup_link=url_for('.signup'))
 
-            if error is None:
-                if request.form.get('rememberMe') is None:
-                    return "<h1>Content here</h1>"
-                else:
-                    session.clear()
-                    session['logged_in'] = True
-                    return "<h1>Content here and I'm have cookie!</h1>"
+        if error is None:
+            if request.form.get('rememberMe') is None:
+                session['logged_in'] = True
+                session['stay_in'] = False
+                return redirect(url_for('.content'))
 
-                    # return redirect(url_for('content'))
+            else:
+                session['logged_in'] = True
+                session['stay_in'] = True
+                return redirect(url_for('.content'))
 
-            flash(error, category='error')
-            return render_template('signin.html', signup_link=url_for('.signup'))
+        flash(error, category='error')
+        return render_template('signin.html', signup_link=url_for('.signup'))
 
-        else:
-            return render_template('signin.html', signup_link=url_for('.signup'))
+    else:
+        return render_template('signin.html', signup_link=url_for('.signup'))
 
 
 @blueprint.route('/signup', methods=['POST', 'GET'])
 def signup():
+    if session.get('stay_in'):
+        return redirect(url_for('.content'))
+    session.clear()
+
     if request.method == 'POST':
         email, login, password = request.form['email'], request.form['login'], request.form['password']
 
@@ -96,25 +101,24 @@ def confirm_email(token):
     db = get_db()
 
     if db.execute("select * from users where email = ?", [email]).fetchone() is None:
-        return "<h1>your tocen is incorrect</h1>"
+        return "<h1>your token is incorrect</h1>"
     else:
         db.execute(
             "update users set confirmed_email = ? where email = ?", ['True', email])
 
         db.commit()
-        return "<h1>your login is confirmed now</h1>"
-        # return render_template('confirm_email.html')
+        return render_template('confirm_email.html', email=email, signin_link=url_for('.signin'))
 
 
 @blueprint.route('/content')
 def content():
     if session.get('logged_in'):
-        return render_template('content.html')
+        return render_template('content.html', logout_link=url_for('.logout'))
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for('.signin'))
 
 
 @blueprint.route('/logout')
 def logout():
-    session.pop('logged_in', None)
+    session.clear()
     return redirect(url_for('.signin'))
