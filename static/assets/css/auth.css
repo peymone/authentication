@@ -166,6 +166,59 @@ h6 {
     text-decoration: underline;
 }
 
+/* Recovery */
+/*-------------------------------------------------------------*/
+
+.recovery__password,
+.recovery__rpassword {
+    background: var(--input-field-color);
+    width: 100%;
+    max-width: 300px;
+    padding: 13px 18px 13px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 10px;
+    color: var(--input-text-color);
+}
+
+.recovery__password:placeholder-shown+.dynamic-label,
+.recovery__rpassword:placeholder-shown+.dynamic-label {
+    opacity: 0;
+    transform: translateY(1rem);
+}
+
+.recovery__password:placeholder-shown .input__group,
+.recovery__rpassword:placeholder-shown .input__group {
+    padding-top: 0;
+}
+
+.recovery__password:required:valid,
+.recovery__rpassword:required:valid {
+    border: 1px solid var(--btn-color);
+}
+
+.recovery__password:required:invalid,
+.recovery__rpassword:required:invalid {
+    border: 1px solid var(--red-color);
+}
+
+.recovery__password:focus,
+.recovery__rpassword:focus {
+    outline: 0;
+}
+
+.recovery__password::placeholder,
+.recovery__rpassword::placeholder {
+    color: var(--input-text-color);
+}
+
 /* Sign Up */
 /*-------------------------------------------------------------*/
 .signup {
@@ -386,8 +439,7 @@ h6 {
 
 /* btn */
 
-.btn__login,
-.btn__signup {
+.btn {
     background: var(--btn-color);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
@@ -408,9 +460,12 @@ h6 {
     transition: background .2s linear;
 }
 
-.btn__login:hover,
-.btn__signup:hover {
+.btn:hover {
     background: var(--btn-hover-color);
+}
+
+.btn__changepsw {
+    margin-top: 24px;
 }
 
 .theme-toggle {

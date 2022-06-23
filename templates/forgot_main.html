@@ -13,7 +13,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-    <title>Sign in</title>
+    <title>Forgot password</title>
 </head>
 
 <body>
@@ -24,11 +24,10 @@
                     <img src="" alt="Logo">
                 </div>
                 <nav class="nav">
-                    <div class="nav__link">Still don't have an account? <a href="{{ signup_link }}"
-                            class="nav__signup"><span>Sign Up</span></a></div>
-                    <div class="mobile-nav__link"><a href="{{ signup_link }}" class="nav__signup"><span>Sign
-                                Up</span></a>
-                    </div>
+                    <div class="nav__link">Go back to sign in? <a href="{{ signin_link }}"
+                            class="nav__signup"><span>Sign In</span></a></div>
+                    <div class="mobile-nav__link"><a href="{{ signin_link }}" class="nav__signup"><span>Sign
+                                In</span></a></div>
                 </nav>
             </div>
         </header>
@@ -36,31 +35,18 @@
             <div class="container">
                 <div class="auth__inner">
                     <div class="auth__item">
-                        <h1 class="auth__title">Sign in</h1>
-                        <div class="auth__subtitle">Sign in and start managing your candidates!</div>
+                        <h1 class="auth__title">Forgot password</h1>
+                        <div class="auth__subtitle">Enter email to start the password recovery process</div>
                         {% for category, message in get_flashed_messages(True) %}
                         <div class="flash {{category}}">{{message}}</div>
                         {% endfor %}
                         <form action="/signin" method="post" class="auth__form">
                             <div class="input__group">
-                                <input required="required" type="text" id="login" name="login"
-                                    placeholder="Login or email" class="auth__login">
-                                <label for="login" class="dynamic-label">Login or email</label>
+                                <input required="required" type="email" id="email" name="email" placeholder="Email"
+                                    class="signup__email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                                <label for="email" class="dynamic-label">Email</label>
                             </div>
-                            <div class="input__group">
-                                <input required="required" type="password" id="password" name="password"
-                                    placeholder="Password" class="auth__password">
-                                <label for="password" class="dynamic-label">Password</label>
-                            </div>
-                            <div class="auth__options">
-                                <div class="auth__rememberme">
-                                    <input type="checkbox" class="custom-checkbox" id="rememberMe" name="rememberMe"
-                                        value="yes">
-                                    <label for="rememberMe">Remember me</label>
-                                </div>
-                                <a href="" class="auth__fgtpassword">Forgot password?</a>
-                            </div>
-                            <button class="btn btn__login" type="submit">Login</button>
+                            <button class="btn btn__signup" id="btn__signup" type="submit">Send recovery mail</button>
                         </form>
                     </div>
                 </div>
@@ -72,6 +58,7 @@
             </div>
         </footer>
     </div>
+
     <script type="text/javascript" src="../static/assets/js/change-theme.js"></script>
 </body>
 

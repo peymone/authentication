@@ -53,13 +53,13 @@ pswinput.onclick = function () {
     var rpassword = document.getElementById("rpassword").value;
     if (password != rpassword) {
         document.getElementsByClassName("error-text")[0].textContent = 'Password and control password have to be same';
-        document.getElementsByClassName("signup__rpassword")[0].style = "border: 1px solid var(--red-color);";
+        document.getElementsByClassName("rpassword")[0].style = "border: 1px solid var(--red-color);";
         document.getElementsByClassName("error-panel")[0].style = "display: block;";
         document.getElementById("rpassword").setCustomValidity('Passwords do not match');
         // button.disabled = true;
     } else if (rpassword == password) {
         document.getElementsByClassName("error-text")[0].textContent = '';
-        document.getElementsByClassName("signup__rpassword")[0].style = "border: 1px solid var(--btn-color);";
+        document.getElementsByClassName("rpassword")[0].style = "border: 1px solid var(--btn-color);";
         document.getElementsByClassName("error-panel")[0].style = "dipslay: none;";
         document.getElementById("rpassword").setCustomValidity('');
         // button.disabled = false;
