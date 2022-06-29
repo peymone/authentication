@@ -89,7 +89,7 @@ def signup():
         confirm_url = url_for('.confirm_email', token=token, _external=True)
 
         send_email(
-            f"Welcome, {login.title()}! Thanks for signed up. Plesase follow this link to activate your account:\n{confirm_url}", subject='Password confirmation')
+            f"Welcome, {login.title()}! Thanks for signed up. Please follow this link to activate your account:\n{confirm_url}", subject='Password confirmation', recipients=[email.lower()])
         return render_template('signup.html', signin_link=url_for('.signin'))
     else:
         return render_template('signup.html', signin_link=url_for('.signin'))
@@ -112,6 +112,10 @@ def confirm_email(token):
 
 @blueprint.route('/forgot', methods=['POST', 'GET'])
 def forgot_main():
+    if session.get('stay_in'):
+        return redirect(url_for('.content'))
+    session.clear()
+
     if request.method == 'POST':
         token = generate_confirmation_token(request.form['email'])
         forgot_url = url_for('.forgot_password', token=token, _external=True)
@@ -119,7 +123,7 @@ def forgot_main():
         flash("Follow the link in the email to reset your password",
               category='success')
         send_email(
-            f"Please, follow this link to reset your password:\n{forgot_url}", subject='Recovery passwor')
+            f"Please, follow this link to reset your password:\n{forgot_url}", subject='Recovery password', recipients=[request.form['email']])
 
         return render_template('forgot_main.html', signin_link=url_for('.signin'))
     else:
