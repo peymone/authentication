@@ -46,6 +46,7 @@ pswinput.onclick = function () {
     for (i = 0; i < lenSpec; i++)
         password += keyListSpec.charAt(Math.floor(Math.random() * keyListSpec.length));
     password = password.split('').sort(function () { return 0.5 - Math.random() }).join('');
+    navigator.clipboard.writeText(password);
     document.getElementById("password").value = password;
     document.getElementById("rpassword").value = password;
 
