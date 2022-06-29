@@ -60,10 +60,10 @@ def signin():
                 return redirect(url_for('.content'))
 
         flash(error, category='error')
-        return render_template('signin.html', signup_link=url_for('.signup'))
+        return render_template('signin.html', signup_link=url_for('.signup'), forgot_link=url_for('.forgot_main'))
 
     else:
-        return render_template('signin.html', signup_link=url_for('.signup'))
+        return render_template('signin.html', signup_link=url_for('.signup'), forgot_link=url_for('.forgot_main'))
 
 
 @blueprint.route('/signup', methods=['POST', 'GET'])
@@ -89,7 +89,7 @@ def signup():
         confirm_url = url_for('.confirm_email', token=token, _external=True)
 
         send_email(
-            f"Welcome, {login.title()}! Thanks for signed up. Plesase follow this link to activate your account:\n{confirm_url}")
+            f"Welcome, {login.title()}! Thanks for signed up. Plesase follow this link to activate your account:\n{confirm_url}", subject='Password confirmation')
         return render_template('signup.html', signin_link=url_for('.signin'))
     else:
         return render_template('signup.html', signin_link=url_for('.signin'))
@@ -119,7 +119,7 @@ def forgot_main():
         flash("Follow the link in the email to reset your password",
               category='success')
         send_email(
-            f"Please, follow this link to reset your password:\n{forgot_url}")
+            f"Please, follow this link to reset your password:\n{forgot_url}", subject='Recovery passwor')
 
         return render_template('forgot_main.html', signin_link=url_for('.signin'))
     else:
@@ -128,21 +128,21 @@ def forgot_main():
 
 @blueprint.route('/forgot/<token>', methods=['POST', 'GET'])
 def forgot_password(token):
+    email = confirm_token(token)
     if request.method == 'POST':
-        email = confirm_token(token)
         db = get_db()
 
         if db.execute("select * from users where email = ?", [email]).fetchone() is None:
             return "<h1>your token is incorrect</h1>"
         else:
-            db.execute("update users set password = ? where email - ?",
-                       [request.form['password'], email])
+            db.execute("update users set password = ? where email = ?",
+                       [generate_password_hash(request.form['password']), email])
 
             db.commit()
             flash("Your password has been changed!", category='success')
-            return render_template('forgot_password.html', signin_link=url_for('.signin'))
+            return render_template('forgot_password.html', signin_link=url_for('.signin'), email=email, token=token)
     else:
-        return render_template('forgot_password.html', signin_link=url_for('.signin'))
+        return render_template('forgot_password.html', signin_link=url_for('.signin'), email=email, token=token)
 
 
 @blueprint.route('/content')

@@ -40,7 +40,7 @@
                         {% for category, message in get_flashed_messages(True) %}
                         <div class="flash {{category}}">{{message}}</div>
                         {% endfor %}
-                        <form action="/signin" method="post" class="auth__form">
+                        <form action="{{ url_for('auth.forgot_main') }}" method="post" class="auth__form">
                             <div class="input__group">
                                 <input required="required" type="email" id="email" name="email" placeholder="Email"
                                     class="signup__email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">

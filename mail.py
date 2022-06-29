@@ -1,5 +1,4 @@
 from flask_mail import Mail, Message
-from flask import current_app
 
 
 def init_app(app):
@@ -8,7 +7,7 @@ def init_app(app):
     mail = Mail(app)
 
 
-def send_email(text_body, subject='Password confirmation', recipients=['witetrashd@gmail.com']):
+def send_email(text_body, subject, recipients=['witetrashd@gmail.com']):
     message = Message(subject=subject, recipients=recipients)
     message.body = text_body
     # message.html = html_body
